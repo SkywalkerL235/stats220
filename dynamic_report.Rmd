@@ -30,7 +30,7 @@ h3 {
 }
 ```
 
-## This report explores the music listening habits of students, based on survey responses.
+### This report shows students music listening habits as reported by the survey done through google forms.
 
 
 
@@ -62,7 +62,7 @@ The most popular genre is **`r names(sort(table(latest_data$genre), decreasing =
 
 On average, students listen to music for **`r round(mean(latest_data$hours_per_week), 1)`** hours per week.
 
-The maximum listening time is **`r max(latest_data$hours_per_week)`** hours per week/
+The maximum listening time is **`r max(latest_data$hours_per_week)`** hours per week.
 
 # Bar Charts
 
