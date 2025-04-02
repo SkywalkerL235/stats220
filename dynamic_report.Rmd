@@ -1,0 +1,111 @@
+---
+title: My dynamic report
+output: html_fragment
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE, error=FALSE)
+
+```
+
+```{css}
+p {
+  font-size: 15px; 
+  font-family: Georgia, serif;
+}
+body {
+  background-color: #fae2c0;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  font-family: 'Helvetica', sans-serif;
+}
+h2 {
+  color: #2d2390;
+  font-family: Georgia, serif;
+}
+h3 {
+  color: #cc3366;
+  font-family: Georgia, serif;
+}
+```
+
+## This report explores the music listening habits of students, based on survey responses.
+
+
+
+```{r}
+
+library(tidyverse)
+
+
+logged_data <- read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQausqscgIzW3jvmcQm2cMwiJUbUAwoS_H7Oye6rqbLfD2wadupUR6j6xgw2aLCKW4HgBg0pU8xx3ha/pub?gid=1942138870&single=true&output=csv")
+
+latest_data <- logged_data %>%
+  rename(
+    timestamp = `Timestamp`,
+    hours_per_week = `Approximately, how many hours a week do you listen to music?`,
+    genre = `What genre of music do you frequently listen to?`,
+    device = `What do you use when listening to music?`,
+    place = `Where do you most often listen to music?`
+  )
+
+
+most_popular_genre <- names(sort(table(latest_data$genre), decreasing = TRUE))[1]
+most_popular_device <- names(sort(table(latest_data$device), decreasing = TRUE))[1]
+
+```
+
+###  Summary of the Student Music Survey
+
+The most popular genre is **`r names(sort(table(latest_data$genre), decreasing = TRUE))[1]`**.
+
+On average, students listen to music for **`r round(mean(latest_data$hours_per_week), 1)`** hours per week.
+
+The maximum listening time is **`r max(latest_data$hours_per_week)`** hours per week/
+
+# Bar Charts
+
+```{r genre-plot, echo=FALSE, fig.width=11, fig.height=5}
+# genre plot
+genre_plot <- ggplot(data = latest_data) +
+  geom_bar(aes(x = genre, fill = genre)) +
+  labs(title = "Most Frequently Listened Music Genres",
+       caption = "Student Music Survey",
+       x = "Genre",
+       y = "Number of Students") +
+  scale_fill_discrete(guide = FALSE)
+paste("Shows genre listened to by students")
+genre_plot
+```
+
+
+```{r device_plot, echo=FALSE, fig.width=11, fig.height=5}
+# device plot
+device_plot <- ggplot(data = latest_data) +
+  geom_bar(aes(x = device, fill = device)) +
+  labs(title = "Devices Used When Listening to Music",
+       caption = "Student Music Survey",
+       x = "Device",
+       y = "Number of Students") +
+  scale_fill_discrete(guide = FALSE)
+paste("Shows listening devices used to by students")
+device_plot
+```
+
+
+```{r place_plot, echo=FALSE, fig.width=11, fig.height=5}
+# place plot
+place_plot <- ggplot(data = latest_data) +
+  geom_bar(aes(x = place, fill = place)) +
+  labs(title = "Where Students Most Often Listen to Music",
+       caption = "Student Music Survey",
+       x = "Place",
+       y = "Number of Students") +
+    scale_fill_discrete(guide = FALSE)
+
+paste("Shows where students are likely to listen to music from")
+place_plot
+```
+
+
